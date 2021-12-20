@@ -1,0 +1,49 @@
+{
+    "name": "pcsoftgroup/tamkeen-php-sdk",
+    "description": "The official Tamkeen PHP SDK.",
+    "keywords": [
+        "pcsoftgroup",
+        "tamkeen",
+        "sdk"
+    ],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/pcsoftgroup/tamkeen-php-sdk/issues",
+        "source": "https://github.com/pcsoftgroup/tamkeen-php-sdk"
+    },
+    "authors": [
+        {
+            "name": "Huthaifah Mustafa",
+            "email": "hsul4n@pcsoftgroup.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2|^8.0",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^6.3.1|^7.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.3.1",
+        "phpunit/phpunit": "^8.4|^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PCsoft\\Tamkeen\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

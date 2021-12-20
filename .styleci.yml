@@ -1,0 +1,4 @@
+php:
+  preset: pcsoftgroup
+js: true
+css: true
