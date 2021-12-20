@@ -79,7 +79,7 @@ class Tamkeen
      * @param  \GuzzleHttp\Client|null  $guzzle
      * @return void
      */
-    public function __construct($key = null, $cvvKey = null, $username = null, $password = null, $serviceId = null, HttpClient $guzzle = null)
+    public function __construct($key = null, $cvvKey = null, $username = null, $password = null, $serviceId = null, string $certificatePath = null, $certificatePassword = null, HttpClient $guzzle = null)
     {
         if (!is_null($key)) {
             $this->setKey($key);
@@ -99,6 +99,10 @@ class Tamkeen
 
         if (!is_null($serviceId)) {
             $this->setServiceId($serviceId);
+        }
+
+        if (!is_null($certificatePath) && !is_null($certificatePassword)) {
+            $this->setCertificate($certificatePath, $certificatePassword);
         }
 
         if (!is_null($guzzle)) {
