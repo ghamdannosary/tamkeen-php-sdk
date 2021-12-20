@@ -17,7 +17,6 @@ To install the SDK in your project you need to add the package via composer:
 
 ```json
 {
-    // ...
     "require": {
         "pcsoftgroup/tamkeen-php-sdk": "dev"
     },
@@ -35,7 +34,6 @@ To install the SDK in your project you need to add the package via composer:
             }
         }
     ]
-    // ...
 }
 ```
 
