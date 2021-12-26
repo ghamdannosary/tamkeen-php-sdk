@@ -19,6 +19,26 @@ class Resource
      * @var \PCsoft\Tamkeen\Tamkeen|null
      */
     protected $tamkeen;
+    /**
+     * The request id of the resource.
+     *
+     * @var string
+     */
+    public $RequestId;
+
+    /**
+     * The result code of the resource.
+     *
+     * @var int
+     */
+    public $ResultCode;
+
+    /**
+     * The result message of the resource.
+     *
+     * @var int
+     */
+    public $ResultMessage;
 
     /**
      * Create a new resource instance.
@@ -95,5 +115,15 @@ class Resource
         $separator = $separator ?: ', ';
 
         return implode($separator, array_column($tags ?? [], 'name'));
+    }
+
+    public function isSuccess(): bool
+    {
+        return $this->ResultCode === 1;
+    }
+
+    public function isFailed(): bool
+    {
+        return !$this->isSuccess();
     }
 }

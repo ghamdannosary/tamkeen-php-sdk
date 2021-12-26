@@ -3,46 +3,38 @@
 namespace PCsoft\Tamkeen;
 
 use GuzzleHttp\Client as HttpClient;
-use PCsoft\Tamkeen\Resources\User;
 
 class Tamkeen
 {
-    use MakesHttpRequests, Actions\ManagesPayments;
+    use MakesHttpRequests, Actions\ManageAccount, Actions\ManagesPayments;
 
     /**
-     * The Tamkeen enkKey.
-     *
-     * @var string
-     */
-    protected $key;
-
-    /**
-     * The Tamkeen Customer CVV Key.
-     *
-     * @var string
-     */
-    protected $cvvKey;
-
-    /**
-     * The Tamkeen Username.
+     * The Tamkeen username.
      *
      * @var string
      */
     protected $username;
 
     /**
-     * The Tamkeen Password.
+     * The Tamkeen password.
      *
      * @var string
      */
     protected $password;
 
     /**
-     * The Tamkeen spId.
+     * The Tamkeen encryption key.
      *
      * @var string
      */
-    protected $serviceId;
+    protected $encryptionKey;
+
+    /**
+     * The Tamkeen service provider id (spId).
+     *
+     * @var string
+     */
+    protected $serviceProviderId;
 
     /**
      * The Tamkeen certificate path.
@@ -79,16 +71,8 @@ class Tamkeen
      * @param  \GuzzleHttp\Client|null  $guzzle
      * @return void
      */
-    public function __construct($key = null, $cvvKey = null, $username = null, $password = null, $serviceId = null, string $certificatePath = null, $certificatePassword = null, HttpClient $guzzle = null)
+    public function __construct($username = null, $password = null, $serviceProviderId = null, $encryptionKey = null, string $certificatePath = null, $certificatePassword = null, HttpClient $guzzle = null)
     {
-        if (!is_null($key)) {
-            $this->setKey($key);
-        }
-
-        if (!is_null($cvvKey)) {
-            $this->setCvvKey($cvvKey);
-        }
-
         if (!is_null($username)) {
             $this->setUsername($username);
         }
@@ -97,8 +81,12 @@ class Tamkeen
             $this->setPassword($password);
         }
 
-        if (!is_null($serviceId)) {
-            $this->setServiceId($serviceId);
+        if (!is_null($serviceProviderId)) {
+            $this->setServiceProviderId($serviceProviderId);
+        }
+
+        if (!is_null($encryptionKey)) {
+            $this->setEncryptionKey($encryptionKey);
         }
 
         if (!is_null($certificatePath) && !is_null($certificatePassword)) {
@@ -123,32 +111,6 @@ class Tamkeen
         return array_map(function ($data) use ($class, $extraData) {
             return new $class($data + $extraData, $this);
         }, $collection);
-    }
-
-    /**
-     * Set the merchant key.
-     *
-     * @param  string $key
-     * @return $this
-     */
-    public function setKey(string $key)
-    {
-        $this->key = $key;
-
-        return $this;
-    }
-
-    /**
-     * Set the customer cvv key.
-     *
-     * @param  string $cvvKey
-     * @return $this
-     */
-    public function setCvvKey(int $cvvKey)
-    {
-        $this->cvvKey = $cvvKey;
-
-        return $this;
     }
 
     /**
@@ -178,14 +140,27 @@ class Tamkeen
     }
 
     /**
-     * Set the merchant serviceId.
+     * Set the service provider id.
      *
-     * @param  string $serviceId
+     * @param  string $serviceProviderId
      * @return $this
      */
-    public function setServiceId($serviceId)
+    public function setServiceProviderId($serviceProviderId)
     {
-        $this->serviceId = $serviceId;
+        $this->serviceProviderId = $serviceProviderId;
+
+        return $this;
+    }
+
+    /**
+     * Set the encryption key.
+     *
+     * @param  string $encryptionKey
+     * @return $this
+     */
+    public function setEncryptionKey(string $encryptionKey)
+    {
+        $this->encryptionKey = $encryptionKey;
 
         return $this;
     }
@@ -193,7 +168,8 @@ class Tamkeen
     /**
      * Set the certificate path.
      *
-     * @param  string $serviceId
+     * @param  string $certificatePath
+     * @param  mixed $certificatePassword
      * @return $this
      */
     public function setCertificate(string $certificatePath, $certificatePassword)
@@ -236,32 +212,24 @@ class Tamkeen
     public function build(int $port)
     {
         $this->guzzle = $this->guzzle ?: new HttpClient([
-            'base_uri' => "https://www.tamkeen.com.ye:{$port}/CashPG/api/",
+            'base_uri' => "https://www.tamkeen.com.ye:{$port}/CashPay/api/",
             'http_errors' => false,
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'encPassword' => $this->encryptPassword($this->key, $this->password),
+                'encPassword' => $this->encryptPassword($this->encryptionKey, $this->password),
             ],
+            'verify' => false,
         ]);
 
         return $this;
     }
 
-    /**
-     * Encrypt password
-     *
-     * @return string
-     */
-    private function encryptPassword($plaintext, $password)
+    private function encryptPassword($key, $plaintext)
     {
-        $method = "AES-256-CBC";
-        $key = hash('sha256', $password, true);
-        $iv = openssl_random_pseudo_bytes(16);
+        $method = 'aes-256-cbc';
+        $iv = chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0);
 
-        $ciphertext = openssl_encrypt($plaintext, $method, $key, OPENSSL_RAW_DATA, $iv);
-        $hash = hash_hmac('sha256', $ciphertext . $iv, $key, true);
-
-        return $iv . $hash . $ciphertext;
+        return base64_encode(openssl_encrypt($plaintext, $method, $key, OPENSSL_RAW_DATA, $iv));
     }
 }

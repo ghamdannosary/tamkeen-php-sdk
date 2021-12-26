@@ -7,6 +7,13 @@ use Exception;
 class ValidationException extends Exception
 {
     /**
+     * The request id used in request
+     *
+     * @var mixed
+     */
+    public $requestId;
+
+    /**
      * The array of errors.
      *
      * @var array
@@ -19,10 +26,11 @@ class ValidationException extends Exception
      * @param  array  $errors
      * @return void
      */
-    public function __construct(array $errors)
+    public function __construct($requestId, array $errors)
     {
         parent::__construct('The given data failed to pass validation.');
 
+        $this->requestId = $requestId;
         $this->errors = $errors;
     }
 
@@ -34,5 +42,15 @@ class ValidationException extends Exception
     public function errors()
     {
         return $this->errors;
+    }
+
+    /**
+     * The requestId returned from the operation.
+     *
+     * @return array|null
+     */
+    public function requestId()
+    {
+        return $this->requestId;
     }
 }

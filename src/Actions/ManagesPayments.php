@@ -11,18 +11,22 @@ trait ManagesPayments
      * Create a new payment. API recommends a 2 minute delay between checks.
      *
      * @param  string  $phone
+     * @param  int  $cvvKey
      * @param  int  $amount
-     * @param  int  $currency
+     * @param  \PCsoft\Tamkeen\Resources\Currency  $currency
+     * @param  string  $description
      * @param  bool  $wait
      * @param  int  $timeout
      * @return \PCsoft\Tamkeen\Resources\Payment
      */
-    public function createPayment(string $phone, int $amount, int $currency, $wait = false, $timeout = 900)
+    public function createPayment(string $phone, int $cvvKey, int $amount, int $currency, string $description = null, $wait = false, $timeout = 900)
     {
         $response = $this->post('CashPay/InitPayment', [
             'TargetMSISDN' => $phone,
+            'TargetCustomerCVVKey' => $cvvKey,
             'Amount' => $amount,
             'CurrencyId' => $currency,
+            'Desc' => $description,
         ]);
 
         if ($wait) {
@@ -66,10 +70,10 @@ trait ManagesPayments
     }
 
     /**
-     * Get a payment instance.
+     * Check a payment instance.
      *
      * @param  string  $ref
-     * @param  string  $type [InitOP | PayOP]
+     * @param  \PCsoft\Tamkeen\Resources\OperationStatusType $type
      * @return \PCsoft\Tamkeen\Resources\Payment
      */
     public function checkPayment(string $ref, string $type)

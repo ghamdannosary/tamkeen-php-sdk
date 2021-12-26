@@ -4,7 +4,7 @@ namespace PCsoft\Tamkeen\Exceptions;
 
 use Exception;
 
-class NotFoundException extends Exception
+class UnexpectedExcpetion extends Exception
 {
     /**
      * The request id used in request
@@ -18,9 +18,9 @@ class NotFoundException extends Exception
      *
      * @return void
      */
-    public function __construct($requestId)
+    public function __construct($requestId, string $body)
     {
-        parent::__construct('The resource you are looking for could not be found.');
+        parent::__construct($body);
 
         $this->requestId = $requestId;
     }

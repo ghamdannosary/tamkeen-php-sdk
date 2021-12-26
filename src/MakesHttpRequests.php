@@ -6,11 +6,14 @@ use Exception;
 use PCsoft\Tamkeen\Exceptions\FailedActionException;
 use PCsoft\Tamkeen\Exceptions\NotFoundException;
 use PCsoft\Tamkeen\Exceptions\TimeoutException;
+use PCsoft\Tamkeen\Exceptions\UnexpectedExcpetion;
 use PCsoft\Tamkeen\Exceptions\ValidationException;
 use Psr\Http\Message\ResponseInterface;
 
 trait MakesHttpRequests
 {
+    protected $requestId;
+
     /**
      * Make a GET request to Tamkeen servers and return the response.
      *
@@ -69,20 +72,19 @@ trait MakesHttpRequests
     protected function request($verb, $uri, array $payload = [])
     {
         $timestamp = round(microtime(true) * 1000);
-        $token = md5($this->serviceId . $this->username . $timestamp);
-        $request_id = strtoupper($this->username) . '_' . $timestamp . '_' . rand();
+        $token = md5($this->serviceProviderId . $this->username . $timestamp);
+        $this->requestId = strtoupper($this->username) . '_' . $timestamp . '_' . rand();
 
         $response = $this->guzzle->request($verb, $uri, [
             'json' => $payload + [
-                'RequestID' => $request_id,
+                'RequestID' => $this->requestId,
                 'UserName' => $this->username,
-                'SpId' => $this->serviceId,
+                'SpId' => $this->serviceProviderId,
                 'MDToken' => $token,
             ],
             'headers' => ['unixtimestamp' => $timestamp],
             'cert' => [$this->certificatePath, $this->certificatePassword],
             'curl' => [CURLOPT_SSLCERTTYPE => 'P12'], // Define it's a PFX key
-            'verify' => true,
         ]);
 
         $statusCode = $response->getStatusCode();
@@ -110,18 +112,18 @@ trait MakesHttpRequests
     protected function handleRequestError(ResponseInterface $response)
     {
         if ($response->getStatusCode() == 422) {
-            throw new ValidationException(json_decode((string) $response->getBody(), true));
+            throw new ValidationException($this->requestId, json_decode((string) $response->getBody(), true));
         }
 
         if ($response->getStatusCode() == 404) {
-            throw new NotFoundException();
+            throw new NotFoundException($this->requestId);
         }
 
         if ($response->getStatusCode() == 400) {
-            throw new FailedActionException((string) $response->getBody());
+            throw new FailedActionException($this->requestId, (string) $response->getBody());
         }
 
-        throw new Exception((string) $response->getBody());
+        throw new UnexpectedExcpetion($this->requestId, (string) $response->getBody());
     }
 
     /**
@@ -150,6 +152,6 @@ trait MakesHttpRequests
             goto beginning;
         }
 
-        throw new TimeoutException($output);
+        throw new TimeoutException($this->requestId, $output);
     }
 }
