@@ -53,11 +53,11 @@ $tamkeen->setUsername('YOUR_USERNAME');
 $tamkeen->setPassword('YOUR_PASSWORD');
 $tamkeen->setServiceProviderId('YOUR_SERVICE_PROVIDER_ID');
 $tamkeen->setEncryptionKey('YOUR_ENCRYPTION_KEY');
-$tamkeen->setCertificate('YOUR_CERTIFICATE_PATH', 'YOUR_CERTIFICATE_PASSWORD');
+$tamkeen->setCertificate('YOUR_CERTIFICATE_PATH', 'YOUR_CERTIFICATE_PASSWORD');//you will need it in production env
 $tamkeen->build('YOUR_PORT');
 
 $payment = $tamkeen->createPayment(
-    phone:'773769681',
+    phone:'77xxxxxxx',
     cvvKey:123,
     amount:100,
     currency:Currency::YER,
