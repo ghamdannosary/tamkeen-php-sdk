@@ -13,8 +13,8 @@ $tamkeen->setCertificate('YOUR_CERTIFICATE_PATH', 'YOUR_CERTIFICATE_PASSWORD');
 $tamkeen->build('YOUR_PORT');
 
 $payment = $tamkeen->createPayment(
-    phone:'773769681',
-    cvvKey:123,
+    phone:'770590905',
+    CustomerCashPayCode:123,
     amount:100,
     currency:Currency::YER,
 );
