@@ -212,7 +212,7 @@ class Tamkeen
     public function build(int $port)
     {
         $this->guzzle = $this->guzzle ?: new HttpClient([
-            'base_uri' => "https://www.tamkeen.com.ye:{$port}/CashPay/api/",
+            'base_uri' => "https://www.tamkeen.com.ye:{$port}/CashPG/api/",
             'http_errors' => false,
             'headers' => [
                 'Accept' => 'application/json',
