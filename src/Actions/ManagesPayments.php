@@ -19,11 +19,11 @@ trait ManagesPayments
      * @param  int  $timeout
      * @return \PCsoft\Tamkeen\Resources\Payment
      */
-    public function createPayment(string $phone, int $cvvKey, int $amount, int $currency, string $description = null, $wait = false, $timeout = 900)
+    public function createPayment(string $phone, int $customerCashPayCode, int $amount, int $currency, string $description = null, $wait = false, $timeout = 900)
     {
         $response = $this->post('CashPay/InitPayment', [
             'TargetMSISDN' => $phone,
-            'TargetCustomerCVVKey' => $cvvKey,
+            'CustomerCashPayCode' => $customerCashPayCode,
             'Amount' => $amount,
             'CurrencyId' => $currency,
             'Desc' => $description,
