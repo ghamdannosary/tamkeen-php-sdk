@@ -14,7 +14,7 @@ $tamkeen->build('YOUR_PORT');
 
 $payment = $tamkeen->createPayment(
     phone:'770590905',
-    CustomerCashPayCode:123,
+    CustomerCashPayCode:555,
     amount:100,
     currency:Currency::YER,
 );
