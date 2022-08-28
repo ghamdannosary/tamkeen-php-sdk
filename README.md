@@ -16,13 +16,13 @@ To install the SDK in your project you need to add the package via composer:
 ```json
 {
     "require": {
-        "pcsoftgroup/tamkeen-php-sdk": "dev"
+        "ghamdannosary/tamkeen-php-sdk": "dev"
     },
     "repositories": [
         {
             "type": "package",
             "package": {
-                "name": "pcsoftgroup/tamkeen-php-sdk",
+                "name": "ghamdannosary/tamkeen-php-sdk",
                 "version": "dev",
                 "source": {
                     "url": "https://github.com/ghamdannosary/tamkeen-php-sdk.git",
@@ -37,7 +37,7 @@ To install the SDK in your project you need to add the package via composer:
 
 ### Upgrading
 
-When upgrading to a new major version of Tamkeen SDK, it's important that you carefully review [the upgrade guide](https://github.com/pcsoftgroup/tamkeen-php-sdk/blob/main/UPGRADE.md).
+When upgrading to a new major version of Tamkeen SDK, it's important that you carefully review [the upgrade guide](https://github.com/ghamdannosary/tamkeen-php-sdk/blob/main/UPGRADE.md).
 
 ### Basic Usage
 
